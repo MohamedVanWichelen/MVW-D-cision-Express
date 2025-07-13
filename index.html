@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MVW | Décision Express</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'beige': {
+                            50: '#f8f5f0',
+                            100: '#f0e9dd',
+                            200: '#e8ddc9',
+                            300: '#d8c8a8',
+                            400: '#c9b38d',
+                            500: '#b99e72',
+                            600: '#a78a5f',
+                            700: '#8a704d',
+                            800: '#6d5a3f',
+                            900: '#574833',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .spinning {
+            animation: spin 0.5s linear infinite;
+        }
+        .roulette-wheel {
+            transition: transform 3s cubic-bezier(0.17, 0.67, 0.12, 0.99);
+        }
+        .option-input:focus {
+            box-shadow: 0 0 0 3px rgba(185, 158, 114, 0.3);
+            border-color: #b99e72;
+        }
+        
+        /* Parallax effect */
+        body {
+            perspective: 1px;
+            height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+        .parallax {
+            transform-style: preserve-3d;
+        }
+        .parallax::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            left: 0;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100" viewBox="0 0 100 100"><rect width="100" height="100" fill="none" stroke="%23e5e5e5" stroke-width="0.5"/></svg>');
+            background-size: 50px 50px;
+            transform: translateZ(-1px) scale(2);
+            z-index: -1;
+        }
+    </style>
+</head>
+<body class="bg-white min-h-screen font-sans parallax">
+    <div class="container mx-auto px-4 py-8 max-w-4xl bg-beige-50 rounded-3xl shadow-lg my-8">
+        <!-- Header -->
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-black mb-2">Décision Express</h1>
+            <p class="text-lg text-gray-700 max-w-lg mx-auto">
+                Laissez le hasard trancher quand vous n'arrivez pas à vous décider
+            </p>
+        </header>
+
+        <div class="bg-white rounded-2xl shadow-xl overflow-hidden">
+            <!-- Main Content -->
+            <div class="p-6 md:p-8">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6 flex items-center">
+                    <i class="fas fa-question-circle text-beige-600 mr-2"></i>
+                    Quelle décision devez-vous prendre ?
+                </h2>
+
+                <!-- Decision Input -->
+                <div class="mb-8">
+                    <div class="flex items-center mb-4">
+                        <h3 class="text-lg font-medium text-beige-800">
+                            <i class="fas fa-list-ul text-beige-600 mr-2"></i>
+                            Vos options (<span id="option-count">0</span>/8)
+                        </h3>
+                        <button id="add-option-btn" class="ml-auto bg-beige-200 hover:bg-beige-300 text-beige-800 px-3 py-1 rounded-full text-sm font-medium transition">
+                            <i class="fas fa-plus mr-1"></i> Ajouter
+                        </button>
+                    </div>
+
+                    <div id="options-container" class="space-y-3">
+                        <!-- Options will be added here dynamically -->
+                    </div>
+                </div>
+
+                <!-- Roulette Wheel -->
+                <div class="flex flex-col items-center my-10">
+                    <div class="relative w-64 h-64 md:w-80 md:h-80 mb-8">
+                        <div id="roulette-wheel" class="roulette-wheel w-full h-full rounded-full border-8 border-beige-200 relative overflow-hidden">
+                            <!-- Segments will be added here dynamically -->
+                            <div class="absolute inset-0 flex items-center justify-center">
+                                <div class="w-16 h-16 rounded-full bg-white border-4 border-beige-500 flex items-center justify-center">
+                                    <i class="fas fa-question text-beige-600 text-xl"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="roulette-pointer" class="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-0 h-0 border-l-8 border-r-8 border-b-16 border-l-transparent border-r-transparent border-b-indigo-600"></div>
+                    </div>
+
+                    <button id="spin-btn" class="px-8 py-3 bg-beige-700 text-white font-bold rounded-full shadow-lg hover:shadow-xl transform hover:scale-105 transition duration-300 flex items-center">
+                        <i class="fas fa-random mr-2"></i> Faire tourner la roue
+                    </button>
+                </div>
+            </div>
+
+            <!-- Result Section -->
+            <div id="result-section" class="hidden bg-beige-100 p-6 border-t border-beige-200">
+                <div class="flex items-center justify-center">
+                    <div class="bg-white rounded-xl p-6 shadow-md max-w-md w-full text-center">
+                        <h3 class="text-lg font-medium text-gray-700 mb-2">La décision est :</h3>
+                        <p id="result-text" class="text-2xl font-bold text-black"></p>
+                        <button id="reset-btn" class="mt-4 px-4 py-2 bg-beige-200 hover:bg-beige-300 text-black rounded-full text-sm font-medium transition">
+                            <i class="fas fa-redo mr-1"></i> Recommencer
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <footer class="mt-12 text-center text-gray-500 text-sm">
+            <p>Décision Express © 2023 - Laissez le hasard choisir pour vous</p>
+        </footer>
+    </div>
+
+    <script src="index.js"></script>
+</body>
+</html>
