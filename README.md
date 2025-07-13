@@ -1,1 +1,69 @@
 # MVW-D-cision-Express
+
+# 🎲 Décide Pour Nous – Application de Décision Hasardeuse entre Amis
+
+> Une application web simple, rapide et élégante pour trancher **à votre place** quand personne n’arrive à se décider.
+
+---
+
+## 🧠 Concept
+
+**Décide Pour Nous** est une application pensée pour les groupes d’amis (ou collègues) qui ne parviennent pas à faire un choix :  
+*“On mange quoi ce soir ?”*, *“On regarde quel film ?”*, *“On va où ce week-end ?”*...
+
+**Plutôt que de discuter pendant 1h**, laissez l’application **choisir aléatoirement** une option parmi celles proposées.  
+Elle tranche pour vous, de manière totalement hasardeuse, mais avec style.
+
+---
+
+## ✨ Fonctionnalités clés
+
+- 🎯 **Création ultra rapide** d’un vote aléatoire
+- 📝 Ajouter un **titre de situation** et des **options personnalisées**
+- 🎰 **Sélection aléatoire** d’une réponse visuellement animée
+- 🌄 **Effet de parallaxe** fluide pour l’esthétique
+- 🎨 **Design épuré et doux** : beige/blanc avec noir en couleur secondaire
+- 🟣 **Bords arrondis** proportionnels pour une UI moderne et accessible
+- 📱 **100% responsive** (mobile & desktop)
+
+---
+
+## 🎨 Direction artistique
+
+| Élément | Description |
+|--------|-------------|
+| **Couleurs principales** | `#FFFFFF` (blanc), `#F5F0E6` (beige doux) |
+| **Couleur secondaire** | `#0D0D0D` (noir profond utilisé en accent) |
+| **Typographie** | Sans-serif (ex : Inter, Poppins) pour une lecture fluide |
+| **Style général** | Moderne, minimaliste, ergonomique, chaleureux |
+| **Bords arrondis** | Uniformes et harmonisés (radius entre `12px` et `24px`) |
+| **Animations** | Douces transitions + effet **parallaxe** pour fond ou header |
+
+---
+
+## 🧱 Structure technique
+
+- **Frontend** : HTML5, CSS3 (Flexbox, animations, parallaxe), JavaScript (vanilla)
+- **Librairies éventuelles** : Aucune requise, mais GSAP / ScrollMagic possible pour les effets parallaxe
+- **Aucune base de données** : application 100% côté client, sans compte
+
+---
+
+## 🚀 Utilisation
+
+### 1. Lancer l’application
+Ouvre `index.html` dans ton navigateur (aucune installation nécessaire).
+
+### 2. Créer une situation
+- Titre de la décision (ex : *“On regarde quoi ce soir ?”*)
+- Ajouter 2 à 6 options
+
+### 3. Lancer la sélection
+- Clique sur “Décide pour nous !”
+- L’app génère un **choix aléatoire animé**
+- Le résultat est **clairement affiché**, avec du style
+
+---
+
+## 📁 Arborescence du projet
+
