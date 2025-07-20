@@ -349,6 +349,149 @@ footer {
         </footer>
     </div>
 
-    <script src="index.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const wheel = document.getElementById('wheel');
+    const spinBtn = document.getElementById('spinBtn');
+    const resultSection = document.getElementById('resultSection');
+    const resultChoice = document.getElementById('resultChoice');
+    const motivation = document.getElementById('motivation');
+    const newSpinBtn = document.getElementById('newSpinBtn');
+    const choiceInputs = document.querySelectorAll('.choice-input');
+    
+    // Messages motivants
+    const motivations = [
+        "C'est la meilleure décision que vous pouviez prendre !",
+        "La roue ne se trompe jamais !",
+        "C'est écrit dans les étoiles !",
+        "Vous avez le destin de votre côté !",
+        "Le hasard a choisi, et c'est parfait !",
+        "Cette décision vous mènera vers le succès !",
+        "Vous avez fait le bon choix sans même le savoir !",
+        "La roue a parlé, c'est la voie à suivre !"
+    ];
+    
+    // Couleurs pour les segments
+    const colors = [
+        '#f5f5dc', '#d4af37', '#f5f5dc', '#d4af37',
+        '#f5f5dc', '#d4af37', '#f5f5dc', '#d4af37'
+    ];
+    
+    // Mettre à jour l'apparence des champs remplis
+    choiceInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            if (this.value.trim() !== '') {
+                this.classList.add('filled');
+            } else {
+                this.classList.remove('filled');
+            }
+        });
+    });
+    
+    // Créer les segments de la roue
+    function createWheelSegments() {
+        wheel.innerHTML = '';
+        const choices = getValidChoices();
+        
+        if (choices.length < 2) {
+            showNotification("Veuillez entrer au moins 2 choix valides");
+            return false;
+        }
+        
+        const segmentAngle = 360 / choices.length;
+        
+        choices.forEach((choice, index) => {
+            const segment = document.createElement('div');
+            segment.className = 'wheel-segment';
+            segment.textContent = choice;
+            segment.style.backgroundColor = colors[index % colors.length];
+            segment.style.transform = `rotate(${index * segmentAngle}deg)`;
+            wheel.appendChild(segment);
+        });
+        
+        return true;
+    }
+    
+    // Obtenir les choix valides
+    function getValidChoices() {
+        const choices = [];
+        choiceInputs.forEach(input => {
+            const value = input.value.trim();
+            if (value !== '') {
+                choices.push(value);
+            }
+        });
+        return choices;
+    }
+    
+    // Afficher une notification
+    function showNotification(message) {
+        const notification = document.createElement('div');
+        notification.textContent = message;
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(212, 175, 55, 0.9);
+            color: var(--black);
+            padding: 15px 30px;
+            border-radius: 8px;
+            z-index: 1000;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.style.opacity = '0';
+            notification.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => notification.remove(), 500);
+        }, 3000);
+    }
+    
+    // Lancer la roue
+    spinBtn.addEventListener('click', function() {
+        if (!createWheelSegments()) return;
+        
+        spinBtn.disabled = true;
+        resultSection.style.display = 'none';
+        
+        // Rotation aléatoire
+        const randomDegrees = Math.floor(Math.random() * 360) + 1800; // Plusieurs tours + rotation aléatoire
+        wheel.style.transform = `rotate(${randomDegrees}deg)`;
+        
+        // Déterminer le résultat après la rotation
+        setTimeout(() => {
+            const choices = getValidChoices();
+            const segmentAngle = 360 / choices.length;
+            const normalizedDegrees = randomDegrees % 360;
+            const winningIndex = Math.floor(normalizedDegrees / segmentAngle);
+            const winningChoice = choices[winningIndex];
+            
+            resultChoice.textContent = winningChoice;
+            motivation.textContent = motivations[Math.floor(Math.random() * motivations.length)];
+            
+            resultSection.style.display = 'block';
+            spinBtn.disabled = false;
+        }, 4500); // Temps correspondant à la durée de l'animation CSS
+    });
+    
+    // Lancer à nouveau
+    newSpinBtn.addEventListener('click', function() {
+        resultSection.style.display = 'none';
+        spinBtn.click();
+    });
+    
+    // Permettre la soumission avec la touche Entrée dans les champs
+    choiceInputs.forEach(input => {
+        input.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                spinBtn.click();
+            }
+        });
+    });
+});
+    </script>
 </body>
 </html>
