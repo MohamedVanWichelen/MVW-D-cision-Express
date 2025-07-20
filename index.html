@@ -8,7 +8,298 @@
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="index.css">
 </head>
-<style src="index.css"></style>
+<style>
+    :root {
+    --black: #121212;
+    --beige: #f5f5dc;
+    --light-beige: #f8f8f0;
+    --dark-beige: #e8e6d9;
+    --accent: #d4af37;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--black);
+    color: var(--beige);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+}
+
+.container {
+    width: 100%;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 10px;
+    width: 100%;
+}
+
+h1 {
+    font-size: 2.2rem;
+    margin-bottom: 8px;
+    color: var(--beige);
+    font-weight: 700;
+}
+
+.subtitle {
+    font-size: 1rem;
+    color: var(--light-beige);
+    opacity: 0.8;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+.main-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    gap: 15px;
+}
+
+.choices-section {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 15px;
+    padding: 20px;
+    width: 100%;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.choices-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.choice-input {
+    background-color: var(--light-beige);
+    color: var(--black);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 0.9rem;
+    font-family: 'Montserrat', sans-serif;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.choice-input:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.3);
+    transform: translateY(-2px);
+}
+
+.choice-input.filled {
+    background-color: var(--accent);
+    color: var(--black);
+    font-weight: 600;
+}
+
+.wheel-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.wheel-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 0 auto;
+}
+
+.wheel {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    position: relative;
+    overflow: hidden;
+    border: 6px solid var(--accent);
+    box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+    transition: transform 4s cubic-bezier(0.17, 0.67, 0.83, 0.67);
+    transform: rotate(0deg);
+}
+
+.wheel-segment {
+    position: absolute;
+    width: 50%;
+    height: 50%;
+    transform-origin: bottom right;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: var(--black);
+    text-align: center;
+    padding: 5px;
+    font-size: 0.9rem;
+    box-shadow: none; /* Pas de shadow intérieur */
+}
+
+.wheel-pointer {
+    position: absolute;
+    top: -15px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 30px;
+    height: 30px;
+    background: var(--accent);
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+    z-index: 10;
+    filter: drop-shadow(0 0 5px rgba(212, 175, 55, 0.5));
+}
+
+.spin-btn {
+    background-color: var(--accent);
+    color: var(--black);
+    border: none;
+    padding: 12px 30px;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(212, 175, 55, 0.3);
+    margin: 10px 0;
+}
+
+.spin-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(212, 175, 55, 0.4);
+}
+
+.spin-btn:disabled {
+    background-color: var(--dark-beige);
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+.result-section {
+    display: none;
+    text-align: center;
+    width: 100%;
+    animation: fadeIn 0.8s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-card {
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 20px;
+    margin-top: 10px;
+    border: 2px solid var(--accent);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.result-title {
+    font-size: 1.3rem;
+    margin-bottom: 15px;
+    color: var(--accent);
+}
+
+.result-choice {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 15px 0;
+    color: var(--beige);
+    text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+}
+
+.motivation {
+    font-style: italic;
+    margin: 15px 0;
+    color: var(--light-beige);
+    font-size: 0.95rem;
+}
+
+.new-spin-btn {
+    background-color: transparent;
+    color: var(--beige);
+    border: 2px solid var(--accent);
+    padding: 10px 25px;
+    font-size: 0.9rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: 15px;
+}
+
+.new-spin-btn:hover {
+    background-color: rgba(212, 175, 55, 0.2);
+}
+
+.instructions {
+    text-align: center;
+    margin: 10px 0;
+    color: var(--light-beige);
+    font-size: 0.85rem;
+    max-width: 600px;
+}
+
+footer {
+    margin-top: 20px;
+    text-align: center;
+    color: var(--light-beige);
+    opacity: 0.7;
+    font-size: 0.8rem;
+}
+
+@media (max-width: 768px) {
+    .wheel-container {
+        width: 250px;
+        height: 250px;
+    }
+    
+    .choices-container {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    h1 {
+        font-size: 1.8rem;
+    }
+    
+    .result-choice {
+        font-size: 1.7rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .wheel-container {
+        width: 220px;
+        height: 220px;
+    }
+    
+    .choices-container {
+        grid-template-columns: 1fr;
+    }
+    
+    h1 {
+        font-size: 1.6rem;
+    }
+}
+</style>
 <body>
     <div class="container">
         <header>
